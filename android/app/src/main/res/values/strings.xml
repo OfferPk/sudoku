@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Quillnine</string>
+    <string name="title_activity_main">Quillnine</string>
+    <string name="package_name">com.offerpk.sudoku</string>
+    <string name="custom_url_scheme">com.offerpk.sudoku</string>
+</resources>

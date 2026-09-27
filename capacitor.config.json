@@ -1,0 +1,11 @@
+{
+  "appId": "com.offerpk.sudoku",
+  "appName": "Quillnine",
+  "webDir": "www",
+  "android": {
+    "backgroundColor": "#f7f4ee"
+  },
+  "plugins": {
+    "AdMob": {}
+  }
+}
