@@ -537,6 +537,15 @@
   $('btn-stats').addEventListener('click', function () { SFX.unlock(); SFX.click(); statsTab = save.lastDiff || 'medium'; renderStats(); show('stats'); });
   $('btn-shop').addEventListener('click', function () { SFX.unlock(); SFX.click(); renderShop(); show('shop'); });
   $('btn-settings-home').addEventListener('click', function () { SFX.unlock(); SFX.click(); syncSettingsUI(); show('settings'); });
+  function syncMenuCard() {
+    var b = $('btn-new');
+    if (!b) return;
+    document.documentElement.style.setProperty('--menu-w', b.offsetWidth + 'px');
+    document.documentElement.style.setProperty('--menu-h', b.offsetHeight + 'px');
+  }
+  $('btn-howto').addEventListener('click', function () { SFX.unlock(); SFX.click(); syncMenuCard(); show('howto'); });
+  window.addEventListener('resize', syncMenuCard);
+  syncMenuCard();
   Array.prototype.forEach.call(document.querySelectorAll('[data-close]'), function (b) {
     b.addEventListener('click', function () { SFX.click(); hide(b.dataset.close); });
   });

@@ -1,6 +1,6 @@
 {
   "name": "sudoku",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Quillnine: offline calm sudoku (vanilla JS) with a generator, logical grader and daily puzzle, with a Capacitor Android build and AdMob.",
   "private": true,
   "license": "MIT",

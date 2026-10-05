@@ -33,6 +33,7 @@
       <div class="home-actions">
         <button id="btn-continue" class="btn primary big hidden"><span>Continue</span><small id="continue-sub">Medium · 0:00</small></button>
         <button id="btn-new" class="btn big" ><span>New game</span></button>
+        <button id="btn-howto" class="btn big howto-open" type="button"><span>How to play</span></button>
       </div>
       <div class="home-row">
         <button id="btn-stats" class="btn plate">Statistics</button>
@@ -170,11 +171,27 @@
           <button id="btn-privacy-options" class="btn plate hidden">Ad privacy options</button>
           <button id="btn-reset" class="btn plate danger">Reset statistics &amp; progress</button>
         </div>
-        <p class="ver">Quillnine v1.0.0 · © OfferPk</p>
+        <p class="ver">Quillnine v1.0.1 · © OfferPk</p>
       </div>
     </div>
 
-    <div id="toast" class="toast hidden"></div>
+        <div id="howto" class="overlay hidden">
+      <div class="howto-card" role="dialog" aria-modal="true" aria-label="How to play">
+        <button class="howto-x" type="button" data-close="howto" aria-label="Close">✕</button>
+        <table class="rules">
+          <thead><tr><th>Rule</th><th>Kaise</th></tr></thead>
+          <tbody>
+            <tr><td>Goal</td><td>Har row, column aur 3x3 box mein 1-9 ek dafa</td></tr>
+            <tr><td>Move</td><td>Cell tap karo, phir number</td></tr>
+            <tr><td>Win</td><td>Poora grid solution jaisa bhar jaye</td></tr>
+            <tr><td>Fail</td><td>Limit on ho to teesri ghalat entry par game over. Off ho to fail nahi</td></tr>
+            <tr><td>Booster</td><td>Hint ghalat number theek kare, warna agla logical digit. Extra mistake ek dafa</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+<div id="toast" class="toast hidden"></div>
     <div id="busy" class="busy hidden"><div class="spinner"></div><span>Preparing puzzle…</span></div>
   </div>
 
