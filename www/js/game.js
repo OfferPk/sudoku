@@ -100,6 +100,8 @@
       c.dataset.i = i;
       c.innerHTML = '<span class="v"></span><div class="notes"></div>';
       c.addEventListener('pointerdown', onCellDown);
+      c.setAttribute('role', 'button'); c.tabIndex = -1;
+      c.addEventListener('click', function (e) { if (window.SR && window.SR.assistive(e)) onCellDown(e); });
       b.appendChild(c); cells.push(c);
     }
     var pad = $('pad'); pad.innerHTML = '';
@@ -117,6 +119,7 @@
     var bs = Math.floor(Math.max(220, Math.min(w, h)) / 9) * 9;
     document.documentElement.style.setProperty('--bs', bs + 'px');
   }
+  function noteText(nm) { var a = []; for (var d = 1; d <= 9; d++) if (nm & L.bit(d)) a.push(d); return a.length ? 'notes ' + a.join(' ') : 'empty'; }
   function wrongAt(i) { return G.grid[i] && !G.puzzle[i] && G.grid[i] !== G.solution[i]; }
   function render() {
     if (!G) return;
@@ -139,6 +142,8 @@
       if (c.className.indexOf(' pop') >= 0) cls += ' pop';
       c.className = cls;
       c.firstChild.textContent = v || '';
+      var lab = 'Row ' + (L.ROW[i] + 1) + ', column ' + (L.COL[i] + 1) + ', ' + (G.puzzle[i] ? 'given ' + v : v ? v + (cls.indexOf(' wrong') >= 0 ? ', wrong' : '') : noteText(G.notes[i])) + (i === sel ? ', selected' : '');
+      if (c.getAttribute('aria-label') !== lab) c.setAttribute('aria-label', lab);
       var nd = c.lastChild, nm = v ? 0 : G.notes[i];
       if (nd.dataset.m !== String(nm) + '|' + (save.settings.same ? sv : 0)) {
         var html = '';
@@ -150,9 +155,11 @@
       var d = +b.dataset.d, left = 9 - counts[d];
       b.classList.toggle('done', left <= 0);
       b.lastChild.textContent = left > 0 ? left : '';
+      b.setAttribute('aria-label', 'Number ' + d + (left > 0 ? ', ' + left + ' left' : ', all placed'));
     });
     $('g-diff').textContent = diffName(G.difficulty);
     $('g-diff').classList.toggle('daily', !!G.daily);
+    var lbl = $('g-diff').parentNode.querySelector('.lbl'); if (lbl) lbl.textContent = G.daily ? 'Daily' : 'Level';
     $('g-mist').textContent = limitOn() ? G.mistakes + '/' + MAX_MISTAKES : String(G.mistakes);
     $('g-time').textContent = L.formatTime(G.elapsed);
     $('t-notes').classList.toggle('on', notesMode);
@@ -669,6 +676,7 @@
   window.__weekly = weekly;
 
   // ---------------- boot ----------------
+  if (window.A11y && window.A11y.previewBar) window.A11y.previewBar({ settings: save.settings, marks: false, rerender: null, sfx: function () { SFX.click(); } });
   if (window.A11y) window.A11y.apply(save.settings);
   SFX.setEnabled(save.settings.sound);
   if (validGame(save.game)) G = save.game; else { G = null; save.game = null; }
