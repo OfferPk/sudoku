@@ -514,15 +514,19 @@
       ]
     });
   }
+  var A11Y_IDS = { reduceMotion: 'set-motion', largeText: 'set-large', contrast: 'set-contrast' };
   var SETTINGS = ['limit', 'check', 'autonotes', 'same', 'area', 'timer', 'sound', 'haptics'];
   function syncSettingsUI() {
     SETTINGS.forEach(function (k) { $('set-' + k).checked = !!save.settings[k]; });
     $('set-check').disabled = limitOn();
+    if (window.A11y) window.A11y.sync(save.settings, A11Y_IDS);
     if (limitOn()) $('set-check').checked = true;
     $('btn-privacy-options').classList.toggle('hidden', !(native && window.Ads.privacyOptionsRequired()));
   }
 
   // ---------------- wiring ----------------
+  // v1.8 accessibility
+  if (window.A11y) window.A11y.bind(save.settings, persist, A11Y_IDS, function (k) { haptic('light'); if (k !== 'reduceMotion') { try { window.dispatchEvent(new Event('resize')); } catch (e) {} } });
   $('btn-new').addEventListener('click', function () { SFX.unlock(); SFX.click(); openPicker(); });
   $('btn-continue').addEventListener('click', function () { SFX.unlock(); SFX.click(); showGame(); });
   $('daily-card').addEventListener('click', playDaily);
@@ -665,6 +669,7 @@
   window.__weekly = weekly;
 
   // ---------------- boot ----------------
+  if (window.A11y) window.A11y.apply(save.settings);
   SFX.setEnabled(save.settings.sound);
   if (validGame(save.game)) G = save.game; else { G = null; save.game = null; }
   applyTheme(); buildBoard(); updateHome();
