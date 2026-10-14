@@ -331,7 +331,7 @@
       if (G.daily && dailyUI) dailyUI.complete(G.daily);
     }
     persist(); render();
-    SFX.win(); haptic('success');
+    SFX.win(); haptic('success'); if (window.Juice) setTimeout(function () { window.Juice.burst(); }, 500);
     wave(Array.from({ length: 81 }, function (_, i) { return i; }), 8);
     setTimeout(showComplete, 900);
     if (native && gate.state.puzzlesCompleted >= gate.config.INTERSTITIAL_MIN_PUZZLES - 1) window.Ads.prepareInterstitial();
@@ -435,6 +435,7 @@
     window.Ads.hideBanner();
   }
   function showGame() {
+    maybeTutorial(false);
     $('home').classList.add('hidden'); $('game').classList.remove('hidden');
     layout(); render(); lastTick = Date.now();
     if (G.lost) { $('btn-extra').classList.toggle('hidden', !!G.extraUsed); show('outm'); }
@@ -585,6 +586,37 @@
   });
   document.addEventListener('visibilitychange', function () {
     if (document.visibilityState === 'hidden') { if (!$('game').classList.contains('hidden')) pause(); persist(); }
+  });
+
+  // ---------------- first-level tutorial (coach marks, shown once) ----------------
+  var COACH_KEY = 'quillnine.coach.v1';
+  var COACH_STEPS = [
+      {
+          "target": "#board",
+          "text": "Tap a cell, then pick a number. Each row, column and 3\u00d73 box needs 1\u20139 exactly once."
+      },
+      {
+          "target": "#pad",
+          "text": "Number pad. The small figure shows how many of that number are still left to place."
+      },
+      {
+          "target": "#t-notes",
+          "text": "Notes mode lets you pencil in candidates. Erase clears a cell."
+      },
+      {
+          "target": "#t-hint",
+          "text": "Hint reveals one cell. It plays a short ad only when you tap it."
+      }
+  ];
+  function maybeTutorial(force) {
+    setTimeout(function () {
+      if ($('game').classList.contains('hidden')) return;
+      window.Coach.run(COACH_KEY, COACH_STEPS, { force: force, sfx: function () { SFX.click(); } });
+    }, 450);
+  }
+  $('btn-replay-tutorial').addEventListener('click', function () {
+    SFX.click(); window.CoachLogic.reset(localStorage, COACH_KEY); $('settings').classList.add('hidden');
+    toast('The tutorial will play when you next open the game screen');
   });
 
   // ---------------- achievements + stats ----------------

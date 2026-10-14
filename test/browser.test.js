@@ -8,11 +8,14 @@ const L = require('../www/js/logic.js');
 const URL = (process.argv[2] || 'http://localhost:8780/').replace(/\/?$/, '/');
 const OUT = process.argv[3] || '/tmp';
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+const achInfo = (k) => globalThis.__page.evaluate((k) => { const s = JSON.parse(localStorage.getItem(k) || '{}'); const defs = window.AchLogic.COMMON.concat(window.ACH_DEFS);
+  return { paid: defs.filter(d => s.done && s.done[d.id]).reduce((a, d) => a + d.reward, 0), m: s.m || {}, done: Object.keys(s.done || {}) }; }, k);
 const assert = (c, m) => { if (!c) throw new Error('ASSERT: ' + m); console.log('  ok -', m); };
 
 (async () => {
   const browser = await puppeteer.launch({ executablePath: process.env.CHROME || '/usr/bin/google-chrome', headless: 'new', args: ['--no-sandbox'] });
-  const page = await browser.newPage();
+  const page = await browser.newPage(); globalThis.__page = page; await page.evaluateOnNewDocument(() => { try { localStorage.setItem('quillnine.coach.v1', '1'); } catch (e) {} });
   await page.emulate({ viewport: { width: 360, height: 640, deviceScaleFactor: 3, isMobile: true, hasTouch: true },
     userAgent: 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129 Mobile Safari/537.36' });
   const errors = [];
@@ -135,6 +138,10 @@ const assert = (c, m) => { if (!c) throw new Error('ASSERT: ' + m); console.log(
     assert(g.done && await visible('#complete'), 'puzzle solved: complete screen');
     await page.screenshot({ path: `${OUT}/qn-complete.png` });
     const s = await page.evaluate(() => ({ st: window.__qn.save.stats.easy, coins: window.__qn.save.coins, pc: window.__qn.gate.state.puzzlesCompleted }));
+    const a1 = await achInfo('quillnine.ach.v1');
+    console.log('    ach:', JSON.stringify(a1));
+    assert(a1.m.wins === 1 && a1.m.games >= 1 && a1.m.best_ms > 0 && a1.done.includes('sd_first'), 'achievement counters: solves/games/best time went up; First Ink unlocked');
+    s.coins -= a1.paid;
     assert(s.st.won === 1 && s.st.started === 1 && s.st.bestMs > 0 && s.coins === L.COINS.easy && s.pc === 1, 'stats (won 1, best time), +' + L.COINS.easy + ' coins, ad gate counted 1 solved puzzle');
     assert(await page.evaluate(() => window.__qn.gate.canShow(Date.now())) === false, 'no interstitial before 5 solved puzzles + 3 minutes');
     await page.tap('#btn-c-home'); await sleep(500);
