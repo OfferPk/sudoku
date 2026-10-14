@@ -337,6 +337,7 @@
     if (native && gate.state.puzzlesCompleted >= gate.config.INTERSTITIAL_MIN_PUZZLES - 1) window.Ads.prepareInterstitial();
   }
   function showComplete() {
+    if (window.Review && ach) window.Review.maybe('quillnine.review.v1', ach.get('wins'));
     var st = save.stats[G.difficulty];
     $('c-kicker').textContent = G.daily ? 'DAILY PUZZLE SOLVED' : diffName(G.difficulty).toUpperCase() + ' SOLVED';
     $('c-title').textContent = G.newBest ? 'New best time' : (!G.mistakes && !G.hints ? 'Flawless' : 'Well done');
@@ -587,6 +588,17 @@
   document.addEventListener('visibilitychange', function () {
     if (document.visibilityState === 'hidden') { if (!$('game').classList.contains('hidden')) pause(); persist(); }
   });
+
+  // ---------------- cloud save (Play Games) - OFF unless CLOUD_CONFIG.ENABLED ----------------
+  if (window.CloudSave && window.CloudSave.enabled()) {
+    var CK = window.CLOUD_CONFIG.KEYS;
+    $('btn-cloud').classList.remove('hidden');
+    $('btn-cloud').addEventListener('click', function () {
+      SFX.click(); persist();
+      window.CloudSave.save(CK).then(function (r) { toast(r.ok ? 'Progress backed up to Play Games' : 'Cloud save unavailable'); }, function () { toast('Cloud save failed. Try again later.'); });
+    });
+    window.CloudSave.restore(CK).then(function (r) { if (r && r.applied) location.reload(); }, function () {});
+  }
 
   // ---------------- first-level tutorial (coach marks, shown once) ----------------
   var COACH_KEY = 'quillnine.coach.v1';

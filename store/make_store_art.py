@@ -34,7 +34,8 @@ CAPTIONS = [
     ('04', '7-home', 'A new puzzle every day', 'Daily puzzle and streaks, fully offline'),
     ('05', '5-stats', 'See yourself improve', 'Best times and streaks for every difficulty'),
     ('06', '4-solved', 'Always one solution', 'Every puzzle is checked before you see it'),
-    ('07', '6-themes', 'Four quiet themes', 'Unlock with coins you earn. Cosmetic only'),
+    ('07', 'v15-shop', 'Eight quiet themes', 'Plus backgrounds. Unlock with coins. Cosmetic only'),
+    ('08', 'v15-ach', 'Achievements & stats', '17 goals, best times and streaks'),
 ]
 
 
