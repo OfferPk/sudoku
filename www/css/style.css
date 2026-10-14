@@ -279,3 +279,9 @@ body.bg-starlit, .bg-swatch.bg-starlit { background: radial-gradient(1.5px 1.5px
 body.bg-waves, .bg-swatch.bg-waves { background: repeating-radial-gradient(circle at 50% 120%, rgba(120,220,255,.10) 0 14px, transparent 14px 34px), linear-gradient(180deg, rgba(20,80,120,.25), rgba(0,0,0,0) 60%), var(--bg, #0e1a26); }
 body.bg-prism, .bg-swatch.bg-prism { background: conic-gradient(from 210deg at 50% 30%, rgba(255,80,160,.18), rgba(255,200,80,.14), rgba(80,255,200,.16), rgba(80,140,255,.18), rgba(255,80,160,.18)), var(--bg, #141022); }
 .bg-swatch.bg-none { background: var(--bg, #222); }
+/* v1.2.1: Starlit on light themes = ink-blue stars + soft dusk wash (board stays on its own opaque surface) */
+body.bg-starlit.theme-paper, body.bg-starlit.theme-sage, body.bg-starlit.theme-blossom, body.bg-starlit.theme-sepia,
+body.theme-paper .bg-swatch.bg-starlit, body.theme-sage .bg-swatch.bg-starlit, body.theme-blossom .bg-swatch.bg-starlit, body.theme-sepia .bg-swatch.bg-starlit {
+  background: radial-gradient(circle at 12% 18%, rgba(40,60,140,.8) 0 2.1px, transparent 2.9px), radial-gradient(circle at 68% 12%, rgba(40,60,140,.7) 0 1.8px, transparent 2.6px), radial-gradient(circle at 82% 46%, rgba(40,60,140,.75) 0 2.1px, transparent 2.9px), radial-gradient(circle at 28% 62%, rgba(40,60,140,.65) 0 1.8px, transparent 2.6px), radial-gradient(circle at 52% 84%, rgba(40,60,140,.75) 0 2.1px, transparent 2.9px), radial-gradient(circle at 92% 88%, rgba(40,60,140,.65) 0 1.8px, transparent 2.6px), radial-gradient(120% 60% at 50% 0%, rgba(70,90,170,.28), transparent 70%), var(--bg);
+  background-size: 140px 140px, 160px 160px, 180px 180px, 120px 120px, 200px 200px, 150px 150px, 100% 100%, 100% 100%;
+}
