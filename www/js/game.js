@@ -69,7 +69,7 @@
     var t = $('toast'); t.textContent = msg; t.classList.remove('hidden');
     clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.add('hidden'); }, ms || 2200);
   }
-  function setCoins() { Array.prototype.forEach.call(document.querySelectorAll('.coins-val'), function (e) { e.textContent = save.coins; }); }
+  function setCoins() { Array.prototype.forEach.call(document.querySelectorAll('.coins-val'), function (e) { e.textContent = save.coins; }); if (typeof ach !== 'undefined' && ach) ach.sync(); }
   function theme() { var id = window.ShopCore.current(save, 'theme', 'theme'); for (var i = 0; i < THEMES.length; i++) if (THEMES[i].id === id) return THEMES[i]; return THEMES[0]; }
   function applyTheme() {
     var cl = document.body.classList;
@@ -322,6 +322,12 @@
         }
       }
       gate.puzzleCompleted();
+      if (ach) {
+        ach.bump('games'); ach.bump('wins'); ach.min('best_ms', G.elapsed); ach.bump('win_streak'); ach.max('best_win_streak', ach.get('win_streak'));
+        if (['hard', 'expert', 'master'].indexOf(G.difficulty) >= 0) ach.bump('hard_solves');
+        if (G.difficulty === 'master') ach.bump('master_solves');
+        if (!G.mistakes && !G.hints) ach.bump('perfect');
+      }
       if (G.daily && dailyUI) dailyUI.complete(G.daily);
     }
     persist(); render();
@@ -356,6 +362,7 @@
   }
   function outOfMistakes() {
     G.lost = true;
+    if (ach) { ach.bump('games'); ach.state().m.win_streak = 0; ach.sync(); }
     var st = save.stats[G.difficulty]; st.lost++; st.streak = 0;
     persist();
     SFX.lose();
@@ -580,9 +587,22 @@
     if (document.visibilityState === 'hidden') { if (!$('game').classList.contains('hidden')) pause(); persist(); }
   });
 
+  // ---------------- achievements + stats ----------------
+  var ACH_DEFS = window.ACH_DEFS;
+  var ach = window.Achievements.create({
+    key: 'quillnine.ach.v1', defs: ACH_DEFS,
+    addCoins: function (n) { save.coins += n; persist(); setCoins(); },
+    coins: function () { return save.coins; },
+    bought: function () { return Math.max(0, save.owned.filter(function (id) { return id !== 'paper' && id !== 'midnight'; }).length) + Math.max(0, (save.ownedBg || []).length - 1); },
+    toast: toast, sfx: function (k) { if (k === 'coin') SFX.coin(); else SFX.click(); },
+    stats: function (st) { var g = function (k) { return st.m[k] || 0; }; return [['Puzzles solved', String(g('wins'))], ['Fastest solve', g('best_ms') ? L.formatTime(g('best_ms')) : '—'], ['Perfect solves', String(g('perfect'))], ['Longest win streak', String(g('best_win_streak'))]]; }
+  });
+  $('btn-ach-card').addEventListener('click', function () { SFX.unlock(); SFX.click(); ach.open(); });
+
   // ---------------- daily reward + challenge ----------------
   var dailyUI = window.Daily.create({
     key: 'quillnine.dailyreward.v1',
+    onEvent: function (t, d) { if (!ach) return; if (t === 'claim') { ach.bump('daily_claims'); ach.max('daily_best_day', d.day); } else { ach.bump('challenges'); ach.max('best_chal_streak', d.streak); } },
     addCoins: function (n) { save.coins += n; persist(); setCoins(); },
     rewarded: function (ok, fail) { window.Ads.showRewarded(ok, fail); },
     toast: toast, sfx: function (k) { if (k === 'coin') SFX.coin(); else SFX.click(); },
