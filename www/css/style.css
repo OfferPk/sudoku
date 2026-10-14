@@ -412,3 +412,283 @@ html.a11y-large .board .note, html.a11y-large .board .notes span { font-weight: 
 .a11y-preview-l { opacity: .75; font-weight: 700; }
 .a11y-preview .chip { padding: 5px 10px; border-radius: 999px; border: 1px solid rgba(127,127,127,.45); background: rgba(127,127,127,.12); font-size: 12px; font-weight: 700; color: inherit; }
 .a11y-preview .chip.on { background: #ffd400; color: #1a1400; border-color: #ffd400; }
+
+
+/* ---------------- v1.9.1 calm UI polish ---------------- */
+:root {
+  --ui-radius-sm: 12px;
+  --ui-radius-md: 16px;
+  --ui-radius-lg: 22px;
+  --ui-shadow-card: 0 8px 24px var(--shadow);
+  --ui-shadow-soft: 0 3px 12px var(--shadow);
+}
+
+button, a, .daily-card { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, .daily-card:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+#home {
+  justify-content: safe center;
+  gap: clamp(10px, 1.8vh, 16px);
+  padding-left: clamp(18px, 6vw, 36px);
+  padding-right: clamp(18px, 6vw, 36px);
+  background: radial-gradient(ellipse at 50% 12%, color-mix(in srgb, var(--accent) 6%, transparent), transparent 58%);
+}
+.home-top { top: calc(var(--sat) + 16px); right: clamp(16px, 5vw, 28px); }
+.home-coins, .top-coins {
+  gap: 7px;
+  padding: 6px 13px 6px 6px;
+  border-color: color-mix(in srgb, var(--line) 78%, transparent);
+  box-shadow: var(--ui-shadow-soft);
+}
+.logo { text-align: center; }
+.logo-mark {
+  width: 66px;
+  height: 66px;
+  margin-bottom: 8px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background-size: 22px 22px;
+  box-shadow: 0 8px 22px var(--shadow);
+}
+.logo-mark span { font-size: 40px; }
+.logo h1 { font-size: clamp(36px, 10vw, 44px); letter-spacing: -.025em; }
+.logo .tag { margin-top: 3px; font-size: 10px; letter-spacing: .28em; }
+
+.daily-card {
+  width: min(420px, 100%);
+  padding: 14px 16px;
+  border-radius: var(--ui-radius-lg);
+  border-color: color-mix(in srgb, var(--line) 78%, transparent);
+  box-shadow: var(--ui-shadow-card);
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+.daily-card:active { transform: scale(.99); }
+.dc-kicker { font-size: 10px; letter-spacing: .2em; }
+.dc-date { font-size: 17px; letter-spacing: -.01em; }
+.dc-sub { font-size: 12px; }
+.dc-right { min-width: 72px; text-align: center; padding: 9px 15px; border-radius: 999px; }
+
+.home-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  width: min(420px, 100%);
+}
+.home-actions > #btn-new,
+.home-actions > #btn-continue {
+  grid-column: 1 / -1;
+  width: 100%;
+  min-height: 58px;
+  border-radius: var(--ui-radius-md);
+}
+.home-actions > #btn-new { flex-direction: row; font-size: 17px; }
+.home-actions > #btn-continue {
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 14px 18px;
+  text-align: left;
+  font-size: 16px;
+}
+.home-actions > #btn-continue small { text-align: right; font-size: 12px; }
+.home-actions > #btn-howto,
+.home-actions > #btn-daily,
+.home-actions > #btn-shop-card,
+.home-actions > #btn-ach-card {
+  width: 100%;
+  min-width: 0;
+  min-height: 70px;
+  height: auto;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 12px 14px;
+  border-radius: var(--ui-radius-md);
+  text-align: left;
+  font-size: 14px;
+  line-height: 1.2;
+}
+.home-actions > #btn-howto { align-items: center; text-align: center; }
+.home-actions > #btn-daily small,
+.home-actions > #btn-shop-card small,
+.home-actions > #btn-ach-card small {
+  max-width: 100%;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.25;
+  text-align: left;
+  white-space: normal;
+}
+.home-actions > .howto-open {
+  height: auto;
+  border: 1px solid var(--line) !important;
+  box-shadow: 0 3px 10px var(--shadow);
+}
+.home-actions > .howto-open:active { transform: translateY(1px); }
+#daily-dot { top: 9px; right: 10px; width: 8px; height: 8px; box-shadow: 0 0 0 3px color-mix(in srgb, #ff4d6d 18%, transparent); }
+.home-row { gap: 6px; width: min(420px, 100%); }
+.home-row .btn {
+  min-height: 42px;
+  padding: 9px 5px;
+  border-color: transparent;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  color: var(--muted);
+  font-size: 12px;
+  box-shadow: none;
+}
+.home-link { font-size: 12px; padding: 2px 8px; }
+
+.btn {
+  border-radius: var(--ui-radius-sm);
+  transition: transform .16s ease, background-color .16s ease, border-color .16s ease, box-shadow .16s ease;
+}
+.btn.primary {
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+.btn.plate { border-color: color-mix(in srgb, var(--line) 84%, transparent); }
+.icon-btn { transition: background-color .16s ease, transform .16s ease; }
+
+/* The game HUD and input controls now read as one calm, tactile surface. */
+.topbar {
+  width: min(560px, 100%);
+  margin: 0 auto;
+  padding: 9px clamp(10px, 3vw, 18px) 6px;
+  gap: 6px;
+}
+.topbar .icon-btn {
+  width: 42px;
+  height: 42px;
+  flex: none;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: 0 3px 10px var(--shadow);
+}
+.gstat {
+  padding: 6px 4px;
+  border: 1px solid color-mix(in srgb, var(--line) 74%, transparent);
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--surface) 84%, transparent);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--shadow) 60%, transparent);
+}
+.gstat .lbl { font-size: 9px; letter-spacing: .1em; }
+.gstat b { font-size: 14px; }
+#stage {
+  width: min(560px, 100%);
+  margin: 0 auto;
+  justify-content: center;
+  gap: clamp(12px, 2.2vh, 20px);
+  padding: 8px clamp(10px, 3vw, 18px) 14px;
+}
+.board {
+  border-radius: 13px;
+  border-width: 2px;
+  box-shadow: 0 14px 34px var(--shadow);
+}
+.cell.sel { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 52%, transparent); }
+.tools {
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid color-mix(in srgb, var(--line) 82%, transparent);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  box-shadow: var(--ui-shadow-soft);
+}
+.tool { min-height: 54px; padding: 6px 2px; border-radius: 13px; font-size: 11px; transition: background-color .16s ease, color .16s ease; }
+.tool svg { color: var(--muted); }
+.tool.on { background: var(--area); color: var(--accent); }
+.tool.on svg { color: var(--accent); }
+.tool .badge { top: 2px; right: calc(50% - 28px); }
+.ad-badge { right: calc(50% - 33px); }
+.pad { gap: clamp(3px, 1vw, 6px); }
+.pad button {
+  min-height: 48px;
+  padding: 5px 0 6px;
+  border: 1px solid color-mix(in srgb, var(--line) 76%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  box-shadow: 0 3px 9px color-mix(in srgb, var(--shadow) 65%, transparent);
+  transition: transform .14s ease, background-color .14s ease, border-color .14s ease;
+}
+.pad button small { font-size: 9px; font-weight: 600; }
+.pad button:active:not(.done) { transform: translateY(1px); background: var(--area); }
+.pad button.done { visibility: hidden; }
+
+/* Sheets and dialogs share the same surface language. */
+.overlay { background: var(--overlay); backdrop-filter: blur(8px); }
+.panel {
+  border-radius: 24px;
+  padding: clamp(18px, 5vw, 24px);
+  box-shadow: 0 24px 64px var(--shadow);
+}
+.panel-head { margin-bottom: 12px; }
+.panel h3 { letter-spacing: -.02em; }
+.panel-actions .btn { min-height: 46px; }
+.picker-list button { min-height: 62px; border-radius: 15px; transition: transform .15s ease, border-color .15s ease, background-color .15s ease; }
+.stats-grid div, .stats3 div { border-radius: 15px; }
+.row { min-height: 48px; position: relative; padding: 11px 4px; }
+.row input {
+  display: block;
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+}
+.row:focus-within .sw { outline: 3px solid var(--accent); outline-offset: 2px; }
+#toast { z-index: 49; }
+.howto-card {
+  width: min(480px, 100%);
+  height: auto;
+  max-height: min(78vh, 640px);
+  padding: 24px 20px 18px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: 0 24px 64px var(--shadow);
+  background: var(--surface);
+}
+.howto-x { position: absolute; top: 10px; right: 10px; width: 36px; height: 36px; border-radius: 12px; }
+.rules { font-size: 13px; line-height: 1.45; }
+.rules th, .rules td { padding: 9px 8px; }
+.rules th { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+@media (hover: hover) {
+  .daily-card:hover { transform: translateY(-1px); border-color: var(--accent); box-shadow: 0 12px 28px var(--shadow); }
+  .btn:not(:disabled):hover { border-color: var(--accent); box-shadow: 0 5px 14px var(--shadow); }
+  .btn.primary:not(:disabled):hover { box-shadow: 0 10px 24px color-mix(in srgb, var(--accent) 28%, transparent); }
+  .home-row .btn:hover { color: var(--ink); background: var(--surface); }
+  .picker-list button:hover { transform: translateY(-1px); border-color: var(--accent); }
+  .pad button:hover:not(.done) { border-color: var(--accent); background: var(--area); }
+}
+@media (max-width: 360px) {
+  #home { padding-left: 16px; padding-right: 16px; gap: 9px; }
+  .home-actions { gap: 7px; }
+  .home-actions > #btn-howto, .home-actions > #btn-daily,
+  .home-actions > #btn-shop-card, .home-actions > #btn-ach-card { min-height: 64px; padding: 10px 11px; }
+  .home-row { gap: 2px; }
+  .home-row .btn { font-size: 11px; }
+}
+@media (max-height: 700px) {
+  #home { gap: 8px; }
+  #home .logo { zoom: 1; }
+  .logo-mark { width: 54px; height: 54px; margin-bottom: 4px; border-radius: 16px; }
+  .logo-mark span { font-size: 34px; }
+  .logo h1 { font-size: 34px; }
+  .daily-card { padding: 10px 14px; }
+  .home-actions { gap: 7px; }
+  .home-actions > #btn-new, .home-actions > #btn-continue { min-height: 52px; }
+  .home-actions > #btn-howto, .home-actions > #btn-daily,
+  .home-actions > #btn-shop-card, .home-actions > #btn-ach-card { min-height: 58px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .daily-card, .btn, .icon-btn, .tool, .pad button, .picker-list button { transition: none; }
+}
+
+/* Toasts never block touch targets; stale game notices should not cover the home menu. */
+#toast { pointer-events: none; }
+#home:not(.hidden) ~ #toast { visibility: hidden; }
