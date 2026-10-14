@@ -79,7 +79,7 @@ t('game.js asks for an interstitial in exactly one place: leaving the puzzle-com
 });
 t('rewarded ads only from the Hint and Extra-mistake buttons', () => {
   const game = require('fs').readFileSync(__dirname + '/../www/js/game.js', 'utf8');
-  assert.strictEqual((game.match(/Ads\.showRewarded\(/g) || []).length, 3); // Hint, Extra-mistake + Daily "2x reward" tap-only button
+  assert.strictEqual((game.match(/Ads\.showRewarded\(/g) || []).length, 4); // Hint, Extra-mistake + Daily "2x reward" + Shop "Try 24h" tap-only buttons
 });
 
 console.log(`\n${pass} passed, ${fail} failed`);

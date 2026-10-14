@@ -12,7 +12,7 @@
   function emptyStats() { var s = {}; L.DIFFS.forEach(function (d) { s[d] = { started: 0, won: 0, lost: 0, bestMs: 0, totalMs: 0, perfect: 0, streak: 0, bestStreak: 0 }; }); return s; }
   function defaults() {
     return {
-      coins: 0, owned: ['paper', 'midnight'], theme: 'paper', lastDiff: 'medium',
+      coins: 0, owned: ['paper', 'midnight'], theme: 'paper', bg: 'none', ownedBg: ['none'], trial: {}, lastDiff: 'medium',
       settings: { sound: true, haptics: true, limit: true, check: true, autonotes: true, same: true, area: true, timer: true },
       stats: emptyStats(), daily: { done: {}, streak: 0, best: 0, last: '' }, game: null, ad: {}
     };
@@ -70,11 +70,12 @@
     clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.add('hidden'); }, ms || 2200);
   }
   function setCoins() { Array.prototype.forEach.call(document.querySelectorAll('.coins-val'), function (e) { e.textContent = save.coins; }); }
-  function theme() { for (var i = 0; i < THEMES.length; i++) if (THEMES[i].id === save.theme) return THEMES[i]; return THEMES[0]; }
+  function theme() { var id = window.ShopCore.current(save, 'theme', 'theme'); for (var i = 0; i < THEMES.length; i++) if (THEMES[i].id === id) return THEMES[i]; return THEMES[0]; }
   function applyTheme() {
     var cl = document.body.classList;
     Array.prototype.slice.call(cl).forEach(function (c) { if (/^theme-/.test(c)) cl.remove(c); });
-    cl.add('theme-' + save.theme);
+    cl.add('theme-' + theme().id);
+    window.ShopCore.applyBg(save);
     var m = document.querySelector('meta[name=theme-color]'); if (m) m.setAttribute('content', theme().swatch[0]);
   }
   function limitOn() { return !!save.settings.limit; }
@@ -484,28 +485,22 @@
   // ---------------- shop ----------------
   function renderShop() {
     setCoins();
-    var grid = $('shop-grid'); grid.innerHTML = '';
-    THEMES.forEach(function (th) {
-      var owned = save.owned.indexOf(th.id) >= 0 || th.price === 0, selTh = save.theme === th.id;
-      var d = document.createElement('div'); d.className = 'item' + (selTh ? ' selected' : '');
-      var prev = document.createElement('div'); prev.className = 'prev'; prev.style.background = th.swatch[0];
-      var mini = document.createElement('div'); mini.className = 'mini'; mini.style.borderColor = th.swatch[1]; mini.style.color = th.swatch[1];
-      [5, '', 3, '', 7, '', 1, '', 9].forEach(function (v, k) { var c = document.createElement('i'); c.textContent = v; if (k === 4) { c.style.color = th.swatch[2]; } mini.appendChild(c); });
-      prev.appendChild(mini); d.appendChild(prev);
-      var nm = document.createElement('div'); nm.className = 'nm'; nm.textContent = th.name + (th.dark ? ' (dark)' : ''); d.appendChild(nm);
-      var b = document.createElement('button'); b.className = 'buy';
-      if (selTh) b.textContent = 'In use';
-      else if (owned) { b.textContent = 'Use'; b.classList.add('can'); }
-      else { b.innerHTML = '<span class="coin-ico"></span>' + th.price; if (save.coins >= th.price) b.classList.add('can'); }
-      b.addEventListener('click', function () {
-        if (selTh) return;
-        if (!owned) {
-          if (save.coins < th.price) { SFX.error(); toast('Solve more puzzles to earn ' + (th.price - save.coins) + ' more coins'); return; }
-          save.coins -= th.price; save.owned.push(th.id); SFX.coin();
-        } else SFX.click();
-        save.theme = th.id; persist(); applyTheme(); renderShop();
-      });
-      d.appendChild(b); grid.appendChild(d);
+    window.ShopCore.render({
+      grid: $('shop-grid'), save: save, persist: persist, apply: function () { applyTheme(); setCoins(); }, toast: toast,
+      sfx: function (k) { if (k === 'coin') SFX.coin(); else if (k === 'error') SFX.error(); else SFX.click(); },
+      rewarded: function (ok, fail) { window.Ads.showRewarded(ok, fail); },
+      needMsg: function (n) { return 'Need ' + n + ' more coins. Claim your Daily reward or solve more puzzles.'; },
+      groups: [
+        { title: 'Board & number styles', kind: 'theme', field: 'theme', owned: save.owned, items: THEMES.map(function (t) { return { id: t.id, name: t.name + (t.dark ? ' (dark)' : ''), price: t.price, th: t }; }),
+          thumb: function (it) {
+            var th = it.th, f = document.createDocumentFragment();
+            var wrap = document.createElement('div'); wrap.style.cssText = 'width:100%;height:100%;display:flex;align-items:center;justify-content:center;border-radius:8px;background:' + th.swatch[0];
+            var mini = document.createElement('div'); mini.className = 'mini'; mini.style.borderColor = th.swatch[1]; mini.style.color = th.swatch[1];
+            [5, '', 3, '', 7, '', 1, '', 9].forEach(function (v, k) { var c = document.createElement('i'); c.textContent = v; if (k === 4) c.style.color = th.swatch[2]; mini.appendChild(c); });
+            wrap.appendChild(mini); f.appendChild(wrap); return wrap;
+          } },
+        { title: 'Backgrounds', kind: 'bg', field: 'bg', owned: save.ownedBg, items: window.ShopCore.BACKGROUNDS, thumb: window.ShopCore.bgThumb }
+      ]
     });
   }
   var SETTINGS = ['limit', 'check', 'autonotes', 'same', 'area', 'timer', 'sound', 'haptics'];
@@ -537,6 +532,9 @@
   $('confirm-yes').addEventListener('click', function () { var cb = confirmCb; confirmCb = null; hide('confirm'); if (cb) cb(); });
   $('btn-stats').addEventListener('click', function () { SFX.unlock(); SFX.click(); statsTab = save.lastDiff || 'medium'; renderStats(); show('stats'); });
   $('btn-shop').addEventListener('click', function () { SFX.unlock(); SFX.click(); renderShop(); show('shop'); });
+  $('btn-shop-card').addEventListener('click', function () { SFX.unlock(); SFX.click(); renderShop(); show('shop'); });
+  document.querySelector('[data-close="shop"]').addEventListener('click', function () { if (window.ShopCore.endPreview()) applyTheme(); });
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') applyTheme(); });
   $('btn-settings-home').addEventListener('click', function () { SFX.unlock(); SFX.click(); syncSettingsUI(); show('settings'); });
   function syncMenuCard() {
     var b = $('btn-new');
