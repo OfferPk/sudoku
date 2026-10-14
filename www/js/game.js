@@ -321,6 +321,7 @@
         }
       }
       gate.puzzleCompleted();
+      if (G.daily && dailyUI) dailyUI.complete(G.daily);
     }
     persist(); render();
     SFX.win(); haptic('success');
@@ -580,6 +581,17 @@
   document.addEventListener('visibilitychange', function () {
     if (document.visibilityState === 'hidden') { if (!$('game').classList.contains('hidden')) pause(); persist(); }
   });
+
+  // ---------------- daily reward + challenge ----------------
+  var dailyUI = window.Daily.create({
+    key: 'quillnine.dailyreward.v1',
+    addCoins: function (n) { save.coins += n; persist(); setCoins(); },
+    rewarded: function (ok, fail) { window.Ads.showRewarded(ok, fail); },
+    toast: toast, sfx: function (k) { if (k === 'coin') SFX.coin(); else SFX.click(); },
+    challenge: function () { var info = L.dailyInfo(); return { title: "Today's Puzzle", desc: 'Same ' + diffName(info.difficulty) + ' puzzle for everyone today', cta: "Play today's puzzle" }; },
+    play: function () { playDaily(); }
+  });
+  $('btn-daily').addEventListener('click', function () { SFX.unlock(); SFX.click(); dailyUI.open(); });
 
   // ---------------- boot ----------------
   SFX.setEnabled(save.settings.sound);
