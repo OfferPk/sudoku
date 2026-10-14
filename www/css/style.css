@@ -328,3 +328,48 @@ body.theme-paper .bg-swatch.bg-starlit, body.theme-sage .bg-swatch.bg-starlit, b
 .coach-tip.compact { padding: 7px 10px; font-size: 13px; line-height: 1.25; }
 .coach-tip.compact p { margin: 0 0 5px; }
 .coach-tip.compact .coach-row button { padding: 4px 10px; font-size: 13px; }
+
+/* v1.6 themes */
+.theme-lavender {
+  --bg: #f3f0fa; --surface: #fcfbff; --ink: #2c2640; --muted: #7d7596; --line: #ddd6ee; --line-strong: #4a4166;
+  --given: #2c2640; --user: #6a4cb8; --wrong: #c8483f; --wrong-bg: #f8e1dd;
+  --sel: #e0d6f6; --area: #ebe6f6; --same: #e4dcf5; --note: #786f92; --note-hl: #6a4cb8;
+  --accent: #7a5cc2; --accent-ink: #ffffff; --plate: #fcfbff; --plate-edge: #dcd4ee; --shadow: rgba(45,30,90,.12); --overlay: rgba(35,25,60,.35);
+}
+.theme-forest {
+  --bg: #121c17; --surface: #18241e; --ink: #e4efe6; --muted: #8fa597; --line: #2a3a31; --line-strong: #a9c2b0;
+  --given: #e4efe6; --user: #8fd19e; --wrong: #ff8a80; --wrong-bg: #3a2426;
+  --sel: #2c4a38; --area: #1e2c24; --same: #2a4033; --note: #9cb3a3; --note-hl: #a6e3b4;
+  --accent: #8fd19e; --accent-ink: #0d1f13; --plate: #1c2a22; --plate-edge: #080e0b; --shadow: rgba(0,0,0,.45); --overlay: rgba(0,0,0,.55);
+}
+.theme-terracotta {
+  --bg: #f6ebe2; --surface: #fffaf5; --ink: #3a2418; --muted: #8f7262; --line: #ead5c6; --line-strong: #5e3a26;
+  --given: #3a2418; --user: #b4532c; --wrong: #c0392b; --wrong-bg: #f6dcd6;
+  --sel: #f2d2bf; --area: #f1e2d6; --same: #efd6c6; --note: #8a6a58; --note-hl: #b4532c;
+  --accent: #c0623a; --accent-ink: #ffffff; --plate: #fffaf5; --plate-edge: #e6cdbb; --shadow: rgba(80,40,20,.12); --overlay: rgba(60,30,15,.35);
+}
+.theme-inkgold {
+  --bg: #14141a; --surface: #1b1b23; --ink: #f0ead8; --muted: #a39d8c; --line: #2c2c36; --line-strong: #c8bf9f;
+  --given: #f0ead8; --user: #d8b45a; --wrong: #ff8a80; --wrong-bg: #3e2426;
+  --sel: #3a3424; --area: #20202a; --same: #353024; --note: #aaa38f; --note-hl: #e6c670;
+  --accent: #d8b45a; --accent-ink: #1a1405; --plate: #20202a; --plate-edge: #08080c; --shadow: rgba(0,0,0,.5); --overlay: rgba(0,0,0,.6);
+}
+body.bg-starlit.theme-lavender, body.bg-starlit.theme-terracotta,
+body.theme-lavender .bg-swatch.bg-starlit, body.theme-terracotta .bg-swatch.bg-starlit {
+  background: radial-gradient(circle at 12% 18%, rgba(40,60,140,.8) 0 2.1px, transparent 2.9px), radial-gradient(circle at 68% 12%, rgba(40,60,140,.7) 0 1.8px, transparent 2.6px), radial-gradient(circle at 82% 46%, rgba(40,60,140,.75) 0 2.1px, transparent 2.9px), radial-gradient(circle at 28% 62%, rgba(40,60,140,.65) 0 1.8px, transparent 2.6px), radial-gradient(circle at 52% 84%, rgba(40,60,140,.75) 0 2.1px, transparent 2.9px), radial-gradient(circle at 92% 88%, rgba(40,60,140,.65) 0 1.8px, transparent 2.6px), radial-gradient(120% 60% at 50% 0%, rgba(70,90,170,.28), transparent 70%), var(--bg);
+  background-size: 140px 140px, 160px 160px, 180px 180px, 120px 120px, 200px 200px, 150px 150px, 100% 100%, 100% 100%;
+}
+/* Weekly challenge (v1.6) */
+.weekly { margin-top: 4px; }
+.weekly-left { text-transform: none; letter-spacing: 0; font-weight: 600; opacity: .75; }
+.weekly-goals { display: flex; flex-direction: column; gap: 6px; }
+.weekly-goal { padding: 7px 10px; border-radius: 10px; background: rgba(127,127,127,.12); }
+.weekly-row { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; }
+.weekly-n { white-space: nowrap; }
+.weekly-bar { height: 5px; border-radius: 3px; background: rgba(127,127,127,.25); margin-top: 5px; overflow: hidden; }
+.weekly-bar i { display: block; height: 100%; background: #f2b84b; border-radius: 3px; }
+.weekly-goal.done .weekly-bar i { background: #3fcf8e; }
+.weekly-goal.done { opacity: .75; }
+.weekly-foot { display: flex; align-items: center; gap: 6px; font-size: 12px; margin-top: 8px; opacity: .85; }
+.weekly-crest { font-size: 18px; }
+.daily-panel { max-height: calc(100% - 24px); overflow-y: auto; }
